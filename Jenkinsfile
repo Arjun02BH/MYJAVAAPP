@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'your-username/your-image'
         EC2_SERVER_IP = 'your-ec2-server-ip'
         EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
-        DOCKER_USERNAME = 'Arjun02BH'
+        DOCKER_USERNAME = 'arjuncodeops@gmail.com'
         DOCKER_PASSWORD = 'Boxer@0204'
     }
 
