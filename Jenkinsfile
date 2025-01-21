@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE .'
+                    sh 'sudo docker build -t $DOCKER_IMAGE .'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
-                        sh 'docker push $DOCKER_IMAGE'
+                        sh 'sudo docker push $DOCKER_IMAGE'
                     }
                 }
             }
@@ -46,9 +46,9 @@ pipeline {
                 script {
                     // SSH into the EC2 server and deploy the Docker container
                     sh """
-                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'docker ps -q --filter "name=your-java-app" | xargs -r docker stop'
-                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'docker rm your-java-app || true'
-                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'docker run -d --name your-java-app -p 8080:8080 $DOCKER_IMAGE'
+                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker ps -q --filter "name=your-java-app" | xargs -r docker stop'
+                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker rm your-java-app || true'
+                        ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker run -d --name your-java-app -p 8080:8080 $DOCKER_IMAGE'
                     """
                 }
             }
