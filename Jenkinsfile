@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'ubuntu'
+        DOCKER_IMAGE = 'your-username/your-image'
         DOCKERHUB_CREDENTIALS = 'dockerhub-credentials-id'
         EC2_SERVER_IP = 'your-ec2-server-ip'
         EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image without sudo
-                    sh 'docker build -t $DOCKER_IMAGE .'
+                    docker.build(DOCKER_IMAGE, '.')
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
                 script {
                     // Docker login using Jenkins credentials
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
-                        sh 'docker push $DOCKER_IMAGE'
+                        docker.image(DOCKER_IMAGE).push()
                     }
                 }
             }
