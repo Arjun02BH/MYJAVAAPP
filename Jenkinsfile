@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'your-username/your-image'
-        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials-id'
         EC2_SERVER_IP = 'your-ec2-server-ip'
         EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
+        DOCKER_USERNAME = 'Arjun02BH'
+        DOCKER_PASSWORD = 'Boxer@0204'
     }
 
     stages {
@@ -35,10 +36,11 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Docker login using Jenkins credentials
-                    docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
-                        docker.image(DOCKER_IMAGE).push()
-                    }
+                    // Docker login directly with username and password
+                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                    
+                    // Push Docker image to Docker Hub
+                    docker.image(DOCKER_IMAGE).push()
                 }
             }
         }
