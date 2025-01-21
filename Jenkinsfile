@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'ubuntu'
         DOCKERHUB_CREDENTIALS = 'dockerhub-credentials-id'
         EC2_SERVER_IP = 'your-ec2-server-ip'
-        EC2_SSH_KEY = credentials('ec2-ssh-key-id') // Reference the stored SSH key
+        EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
     }
 
     stages {
