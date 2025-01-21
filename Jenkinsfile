@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'arjuncodeops/your-java-app:latest'
-'
+        DOCKER_IMAGE = 'your-username/your-image'
         EC2_SERVER_IP = 'your-ec2-server-ip'
         EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
         DOCKER_USERNAME = 'arjuncodeops@gmail.com'
