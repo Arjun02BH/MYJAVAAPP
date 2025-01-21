@@ -26,7 +26,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'sudo docker build -t $DOCKER_IMAGE .'
+                    // Build the Docker image without sudo
+                    sh 'docker build -t $DOCKER_IMAGE .'
                 }
             }
         }
@@ -34,8 +35,9 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    // Docker login using Jenkins credentials
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
-                        sh 'sudo docker push $DOCKER_IMAGE'
+                        sh 'docker push $DOCKER_IMAGE'
                     }
                 }
             }
@@ -44,7 +46,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // SSH into the EC2 server and deploy the Docker container
+                    // SSH into EC2 server to stop, remove, and deploy the Docker container
                     sh """
                         ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker ps -q --filter "name=your-java-app" | xargs -r docker stop'
                         ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker rm your-java-app || true'
