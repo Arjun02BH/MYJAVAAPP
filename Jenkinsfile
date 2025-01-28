@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'arjuncodeops/your-java-app'
         EC2_SERVER_IP = 'your-ec2-server-ip'
-        EC2_SSH_KEY = credentials('ec2-ssh-key') // Reference the stored SSH key
+        EC2_SSH_KEY = credentials('ec2-ssh-key')
         DOCKER_USERNAME = 'arjuncodeops@gmail.com'
         DOCKER_PASSWORD = 'Boxer@0204'
     }
@@ -27,7 +27,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image without sudo
                     docker.build(DOCKER_IMAGE, '.')
                 }
             }
@@ -36,10 +35,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Docker login directly with username and password
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                    
-                    // Push Docker image to Docker Hub
                     docker.image(DOCKER_IMAGE).push()
                 }
             }
@@ -48,7 +44,6 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // SSH into EC2 server to stop, remove, and deploy the Docker container
                     sh """
                         ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker ps -q --filter "name=your-java-app" | xargs -r docker stop'
                         ssh -i ${EC2_SSH_KEY} ubuntu@${EC2_SERVER_IP} 'sudo docker rm your-java-app || true'
@@ -64,7 +59,7 @@ pipeline {
             echo 'Deployment completed successfully!'
         }
         failure {
-            echo 'Something went wrong during the pipeline execution.'
+            echo 'Something went wrong.'
         }
     }
 }
